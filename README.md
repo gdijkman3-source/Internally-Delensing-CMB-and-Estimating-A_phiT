@@ -1,44 +1,96 @@
 # CMB Lensing Analysis
 
-This project computes and bins CMB lensing cross- and auto-spectra (phi-T and phi-phi) using FFP10 simulations.
+This project computes and bins CMB lensing cross- and auto-spectra (phi–T and phi–phi) using FFP10 simulations.
 
-## Setup
+## Quick Start (Python 3.10 required)
 
-1. Activate the existing virtual environment:
-   ```bash
-   source .venv/bin/activate
-   ```
-2. Ensure the central configuration file `env_config.py` is present at the project root. It defines the following environment variables:
-   - `PLENS`: Path to an (initially empty) directory where all output results will be written.
-   - `INPUT`: Path to the folder containing input simulations:
-     - CMB maps named `cmb_%05d.fits` (zero-padded indices).
-     - Noise maps named `noise_%05d.fits`.
-     - Data map saved as `SMICA.fits`.
-   - `PARAMS`: Path to parameter inputs (masks, dcl files). Already set by default to `./input`.
-   - `KFIELD`: Path that will hold input lensing kappa fields (harmonic coefficients `klm` files).
+This project ships compiled extension artifacts built against CPython 3.10 (see `*.cpython-310-*.so`), so you must use Python 3.10.x.
 
-## Data Layout
-
-- `<INPUT>/cmb_00000.fits`, `<INPUT>/cmb_00001.fits`, …  (unlensed CMB simulations)
-- `<INPUT>/noise_00000.fits`, `<INPUT>/noise_00001.fits`, …  (noise simulations)
-- `<INPUT>/SMICA.fits`  (observed data map)
-- `<PARAMS>/mask.fits.gz`  (analysis mask)
-- `<PARAMS>/dcl_sim`, `<PARAMS>/dcl_dat`  (input power spectra files)
-
-## Usage
-
-Run the parameter‐file pipeline to generate maps and spectra:
 ```bash
+git clone https://github.com/gdijkman3-source/Internally-Delensing-CMB-and-Estimating-A_phiT.git
+cd Internally-Delensing-CMB-and-Estimating-A_phiT
+
+# Ensure a Python 3.10 interpreter is available (examples):
+#   Ubuntu 22.04+: sudo apt-get update && sudo apt-get install -y python3.10 python3.10-venv
+#   pyenv:         pyenv install 3.10.14 && pyenv local 3.10.14
+
+python3.10 -m venv venv
+source venv/bin/activate
+python --version  # should report 3.10.x
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+## Dependencies
+
+The minimal runtime requirements (with critical pins) are in `requirements.txt`:
+
+- numpy, scipy (array computing, stats)
+- healpy (HEALPix spherical maps)
+- lenspyx (lensing remapping / Wigner operations)
+- matplotlib, seaborn (plotting)
+- tqdm (progress bars)
+
+Additional (optional) packages you may want for development / notebooks: `ipykernel`, `notebook`, `jupyterlab`.
+
+Install extras if needed (inside the activated Python 3.10 venv):
+```bash
+pip install ipykernel notebook jupyterlab
+python -m ipykernel install --user --name cmb-lensing
+```
+
+## Environment Configuration
+
+Edit or create `env_config.py` to define paths (example values shown):
+```python
+import os
+
+PLENS = os.environ.get("PLENS", "/absolute/path/to/output/")
+INPUT = os.environ.get("INPUT", "/absolute/path/to/input/")
+PARAMS = os.environ.get("PARAMS", "./input")  # contains mask.fits.gz, dcl_sim, dcl_dat
+KFIELD = os.environ.get("KFIELD", "/absolute/path/to/kappa_fields/")
+```
+
+Meaning of variables:
+- PLENS: Output directory root (will store generated spectra / intermediates)
+- INPUT: Directory with simulation CMB maps `cmb_%05d.fits`, noise maps `noise_%05d.fits`, and data map `SMICA.fits`
+- PARAMS: Directory holding mask and dCl spectrum inputs (already includes small sample files here)
+- KFIELD: Directory for lensing kappa `klm_%03d.fits` inputs if used
+
+You can also export these as environment variables before running scripts instead of editing the file.
+
+## Data Layout (expected)
+
+```
+<INPUT>/cmb_00000.fits
+<INPUT>/cmb_00001.fits
+... (CMB sims)
+<INPUT>/noise_00000.fits
+<INPUT>/noise_00001.fits
+... (noise sims)
+<KFIELD>/klm_000.fits
+<KFIELD>/klm_001.fits
+... (input lensing)
+<INPUT>/SMICA.fits           # data map
+<PARAMS>/mask.fits.gz        # analysis mask
+<PARAMS>/dcl_sim             # sim power adjustment
+<PARAMS>/dcl_dat             # data power adjustment
+```
+
+## Running the Pipeline
+
+Generate spectra and intermediate products:
+```bash
+source venv/bin/activate
 python run_parfiles.py
 ```
 
-## Next Steps
+You can customize which "parameter set" to run by editing imports inside `run_parfiles.py` or the modules under `parfiles/`.
 
-Once `run_parfiles.py` completes, open the `THESIS/` directory to explore the Jupyter notebooks that generate the analysis plots:
+## Notebooks
 
-- `Amplitude.ipynb`: Lensing amplitude over simulations and data
-- `Carron_2017.ipynb`: Reproducing results from Carron et al. (2017)
-- `PP_results.ipynb`: Phi–Phi auto-spectrum results and diagnostics
-- `PT_results.ipynb`: Phi–T cross-spectrum results and diagnostics
-
-These notebooks contain the plotting code and narrative to visualize and interpret your results.
+After generating results, explore the notebooks in `THESIS/`:
+- `Amplitude.ipynb` – Lensing amplitude vs. simulations
+- `Carron_2017.ipynb` – Reproduction of literature results
+- `PP_results.ipynb` – Phi–phi auto-spectrum
+- `PT_results.ipynb` – Phi–T cross-spectrum
