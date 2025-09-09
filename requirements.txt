@@ -1,0 +1,15 @@
+## Runtime requirements
+## Python interpreter version (use CPython 3.10.x)
+# Python==3.10  # Documented constraint (not installable via pip directly)
+
+numpy==1.26.4
+scipy  # latest compatible with numpy 1.26.4 on PyPI (e.g. 1.11.x/1.12.x); pin if exact reproducibility needed
+healpy==1.18.0
+lenspyx==2.0.5
+matplotlib
+seaborn
+tqdm
+
+## Notes:
+# - Pin scipy exactly after first successful environment solve if strict reproducibility is required.
+# - If you need deterministic plotting, also pin matplotlib and seaborn versions.
