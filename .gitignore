@@ -1,0 +1,11 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Environments
+venv/
+.env/
+
+# Large FITS data (ignored)
+input/*/dat_klm.fits
+input/*/mf_klm.fits
