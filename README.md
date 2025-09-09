@@ -25,11 +25,11 @@ pip install -r requirements.txt
 
 The minimal runtime requirements (with critical pins) are in `requirements.txt`:
 
-- numpy, scipy (array computing, stats)
+- numpy==1.26.4 (required build ABI for included extensions), scipy (array computing, stats; pick a version compatible with numpy 1.26.4)
 - healpy (HEALPix spherical maps)
 - lenspyx (lensing remapping / Wigner operations)
 - matplotlib, seaborn (plotting)
-- tqdm (progress bars)
+- tqdm
 
 Additional (optional) packages you may want for development / notebooks: `ipykernel`, `notebook`, `jupyterlab`.
 
