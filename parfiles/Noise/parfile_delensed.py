@@ -40,13 +40,15 @@ dcl_phas = phas.lib_phas(libdir_dclphas, 3, lmax_ivf)
 dcl = np.loadtxt(os.path.join(os.environ["PARAMS"]  ,"dcl_sim"))[:, :lmax_ivf+1]* utils.cli(transf)**2
 dcl_dat = np.loadtxt(os.path.join(os.environ["PARAMS"]  ,"dcl_dat"))[:, :lmax_ivf+1]* utils.cli(transf)**2
 
-sims_raw  = planck2018_sims.smica_dx12()
 sims_dcl_sim = maps.cmb_maps_noisefree(cmbs.sims_cmb_unl({'tt':dcl[0], 'ee':dcl[1], 'bb':dcl[2]}, dcl_phas), transf)
-sims_dcl_dat = maps_utils.sim_lib_shuffle(maps.cmb_maps_noisefree(cmbs.sims_cmb_unl({'tt':dcl_dat[0], 'ee':dcl_dat[1], 'bb':dcl_dat[2]}, dcl_phas), transf), {-1:nsims})
-sims_len = maps_utils.sim_lib_add_dat([maps_utils.sim_lib_add_sim([sims_raw, sims_dcl_sim]), sims_dcl_dat])
-sims = sims_delensed(sims_len, 1.0, libdir_sims, klm_folder=os.environ['KLMS'])
+sims_dcl_dat = maps.cmb_maps_noisefree(cmbs.sims_cmb_unl({'tt':dcl_dat[0], 'ee':dcl_dat[1], 'bb':dcl_dat[2]}, dcl_phas), transf)
+sims_dcl = maps_utils.sim_lib_add_dat([sims_dcl_sim, sims_dcl_dat])
 
-
+klms_dir = os.environ['KFIELD']
+sims  = planck2018_sims.smica_dx12_custom(libdir=libdir_sims, 
+                                          include_noise=True, 
+                                          sims_dcl=sims_dcl,
+                                          delens=1., klm_folder=klms_dir)
 
 ninv_t = [np.array([3. / nlev_t ** 2])] + Tmaskpaths
 cinv_t = filt_cinv.cinv_t(libdir_cinvt, lmax_ivf,nside, cl_len, transf, ninv_t,

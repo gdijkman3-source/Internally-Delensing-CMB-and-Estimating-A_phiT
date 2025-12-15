@@ -41,7 +41,7 @@ libdir_pixphas = os.path.join(TEMP, 'pix_phas_nside%s'%nside)
 pix_phas = phas.pix_lib_phas(libdir_pixphas, 3, (hp.nside2npix(nside),))
 #: Noise simulation T, Q, U random phases instance.
 
-klms_dir = '/mnt/d/THESIS/LENSING MAPS/'
+klms_dir = os.environ['KFIELD']
 libdir_sims = os.path.join(TEMP, 'delensed_sims')
 sims  = planck2018_sims.smica_dx12_custom(libdir=libdir_sims, include_noise=False, delens=1., klm_folder=klms_dir)
 

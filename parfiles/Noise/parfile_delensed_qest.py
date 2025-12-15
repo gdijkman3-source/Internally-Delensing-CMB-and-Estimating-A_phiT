@@ -9,7 +9,6 @@ from plancklens import qest, qecl, qresp
 from plancklens import nhl
 from plancklens.n1 import n1
 from plancklens.sims import planck2018_sims, cmbs, phas, maps, utils as maps_utils
-from delensed_maps import sims_delensed
 
 assert 'PLENS' in os.environ.keys(), 'Set env. variable PLENS to a writeable folder'
 TEMP =  os.path.join(os.environ['PLENS'], 'noisy_ivfs_delensed_qest')
