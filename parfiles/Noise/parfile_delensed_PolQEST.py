@@ -45,7 +45,7 @@ sims_dcl_dat = maps.cmb_maps_noisefree(cmbs.sims_cmb_unl({'tt':dcl_dat[0], 'ee':
 sims_dcl = maps_utils.sim_lib_add_dat([sims_dcl_sim, sims_dcl_dat])
 
 
-import parfiles.NoiseInputKlm.parfile as plm_par
+import parfiles.Noise.parfile as plm_par
 libdir_sims = os.path.join(TEMP, 'delensed_sims')
 sims  = planck2018_sims.smica_dx12_custom(libdir=libdir_sims, 
                                           include_noise=True, delens=1.,
