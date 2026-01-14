@@ -49,17 +49,16 @@ for (par, estimator) in list_par_estimators:
     # Generate simulated QLMs for each bias simulation
     for i in tqdm(par.mc_sims_bias):
 
-        par.qlms_dd.get_sim_qlm('p%s'%estimator, i)
+        par.qlms_dd.get_sim_qlm(estimator, i)
 
 
     # Compute the mean-field QLM map
-    par.qlms_dd.get_sim_qlm_mf('p%s'%estimator, par.mc_sims_mf_dd)
-
+    par.qlms_dd.get_sim_qlm_mf(estimator, par.mc_sims_mf_dd)
     # Generate simulated QCLs for each variance simulation
     for i in tqdm(par.mc_sims_var):
 
-        par.qcls_ss.get_sim_qcl('p%s'%estimator, i)
-        par.qcls_dd.get_sim_qcl('p%s'%estimator, i)
+        par.qcls_ss.get_sim_qcl(estimator, i)
+        par.qcls_dd.get_sim_qcl(estimator, i)
 
     # Get the Phi-T
-    ffp10_binner_phiT('p%s'%estimator, par, "agr2").get_cL_PHI_T()
+    ffp10_binner_phiT(estimator, par, "agr2").get_cL_PHI_T()
